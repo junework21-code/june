@@ -1,0 +1,1910 @@
+<!doctype html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Lina2 Test</title>
+        <!-- default loader (can be changed via 문서 헤더) -->
+        <!-- default loader removed — '적용하기' 클릭 시 헤더의 스크립트를 삽입합니다 -->
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                padding-top: 16px;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-bottom: 16px;
+            }
+            .row {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            .col {
+                flex: 1;
+            }
+            textarea {
+                width: 100%;
+                height: 120px;
+                font-family: monospace;
+            }
+            input[type='text'] {
+                width: 100%;
+            }
+            pre {
+                background: #f7f7f7;
+                padding: 12px;
+                border-radius: 6px;
+            }
+            .btn {
+                padding: 8px 12px;
+                border-radius: 6px;
+                background: #1f78d1;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+            label {
+                font-weight: 600;
+                display: block;
+                margin-bottom: 6px;
+            }
+            .section-panel {
+                margin-bottom: 24px;
+                padding: 16px 20px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background: #fafafa;
+            }
+            .section-panel h2 {
+                margin-top: 0;
+                margin-bottom: 14px;
+                font-size: 1.1rem;
+            }
+            .render-area-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            #maximizeAdBtn {
+                display: none;
+                padding: 6px 10px;
+                border: 1px solid #aaa;
+                border-radius: 4px;
+                background: #fff;
+                color: #333;
+                cursor: pointer;
+                font-size: 12px;
+            }
+            .log-toolbar {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 8px;
+            }
+            .log-box {
+                max-height: 260px;
+                overflow: auto;
+                font-size: 12px;
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+            .setup-row {
+                display: flex;
+                gap: 14px;
+                align-items: flex-end;
+                flex-wrap: wrap;
+            }
+            .setup-field {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .setup-field input[type='text'] {
+                width: 160px;
+                padding: 6px 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .setup-field select {
+                padding: 6px 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                min-width: 160px;
+            }
+            #setBtn {
+                padding: 8px 16px;
+                border-radius: 6px;
+                background: #2b7a0b;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+            #setBtn:disabled {
+                background: #999;
+                cursor: not-allowed;
+            }
+            #linaSetBtn {
+                padding: 8px 16px;
+                border-radius: 6px;
+                background: #2b7a0b;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+            #linaSetBtn:disabled {
+                background: #999;
+                cursor: not-allowed;
+            }
+            #linaTrafficLight {
+                display: inline-block;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: #ccc;
+                border: 1px solid #aaa;
+                vertical-align: middle;
+                flex-shrink: 0;
+            }
+            #linaTrafficLight.green {
+                background: #2ecc40;
+                border-color: #1a8a28;
+            }
+            #linaTrafficLight.red {
+                background: #e74c3c;
+                border-color: #a93226;
+            }
+            #linaSetStatus {
+                font-size: 13px;
+                color: #555;
+            }
+            #trafficLight {
+                display: inline-block;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: #ccc;
+                border: 1px solid #aaa;
+                vertical-align: middle;
+                flex-shrink: 0;
+            }
+            #trafficLight.green {
+                background: #2ecc40;
+                border-color: #1a8a28;
+            }
+            #trafficLight.red {
+                background: #e74c3c;
+                border-color: #a93226;
+            }
+            #setStatus {
+                font-size: 13px;
+                color: #555;
+            }
+            #userTable {
+                border-collapse: collapse;
+                width: 100%;
+                margin-top: 8px;
+            }
+            #userTable th,
+            #userTable td {
+                border: 1px solid #ddd;
+                padding: 8px 12px;
+                text-align: left;
+                font-size: 14px;
+            }
+            #userTable th {
+                background: #f0f0f0;
+            }
+            /* Render Area: flex container to hold scaled ads with aspect ratio */
+            #renderArea {
+                padding: 12px;
+                border: 1px dashed #ccc;
+                width: 60%;
+                margin: 0 auto;
+                min-height: 80px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: auto;
+            }
+            /* Wrapper for lina-ads to enable transform scaling */
+            .ad-scaled-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                flex: 0 0 auto;
+                overflow: hidden;
+                transform-origin: center;
+                /* Scale will be set dynamically via JS */
+            }
+            /* Ensure lina-ads maintains aspect ratio */
+            lina-ads {
+                display: block;
+                aspect-ratio: auto;
+                width: 100% !important;
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="display: flex; align-items: center; gap: 12px">
+            lina-ads 검증 <button id="resetBtn" class="btn" style="background: #e74c3c">초기화</button>
+        </h1>
+
+        <div class="section-panel setup-row">
+            <label style="font-weight: 600; margin-right: 6px">테스트 환경 선택: </label>
+            <label style="font-weight: 400"><input type="radio" name="env" value="dev" checked /> Dev</label>
+            <label style="font-weight: 400"><input type="radio" name="env" value="stg" /> Stg</label>
+            <label style="font-weight: 400"><input type="radio" name="env" value="prd" /> Prod</label>
+            <button id="envApplyBtn" class="btn" style="background: #6c757d">환경 적용</button>
+        </div>
+
+        <!-- ===== 유저 설정 섹션 ===== -->
+        <div id="userSetupSection" class="section-panel">
+            <h2>유저 설정</h2>
+            <div class="setup-row">
+                <div class="setup-field">
+                    <label for="walletInput">Wallet 주소</label>
+                    <input type="text" id="walletInput" placeholder="wallet 주소 입력" />
+                </div>
+                <div class="setup-field">
+                    <label for="humanVerified">Human Verified</label>
+                    <select id="humanVerified">
+                        <option value="Y" selected="">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+                <div class="setup-field">
+                    <label for="opt1">성별 / 연령대</label>
+                    <select id="opt1">
+                        <option value="Female/15-17">Female/15-17</option>
+                        <option value="Female/18-19">Female/18-19</option>
+                        <option value="Female/20-21">Female/20-21</option>
+                        <option value="Female/22-29">Female/22-29</option>
+                        <option value="Female/30-34">Female/30-34</option>
+                        <option value="Female/35-39">Female/35-39</option>
+                        <option value="Female/40-49">Female/40-49</option>
+                        <option value="Female/50-59">Female/50-59</option>
+                        <option value="Female/60-69">Female/60-69</option>
+                        <option value="Female/over70">Female/over70</option>
+                        <option value="Male/15-17">Male/15-17</option>
+                        <option value="Male/18-19">Male/18-19</option>
+                        <option value="Male/20-21">Male/20-21</option>
+                        <option value="Male/22-29">Male/22-29</option>
+                        <option value="Male/30-34">Male/30-34</option>
+                        <option value="Male/35-39">Male/35-39</option>
+                        <option value="Male/40-49">Male/40-49</option>
+                        <option value="Male/50-59">Male/50-59</option>
+                        <option value="Male/60-69">Male/60-69</option>
+                        <option value="Male/over70">Male/over70</option>
+                    </select>
+                </div>
+                <div class="setup-field">
+                    <label for="opt2">지역 (도도부현)</label>
+                    <select id="opt2">
+                        <option value="Hokkaido">Hokkaido</option>
+                        <option value="Aomori">Aomori</option>
+                        <option value="Iwate">Iwate</option>
+                        <option value="Miyagi">Miyagi</option>
+                        <option value="Akita">Akita</option>
+                        <option value="Yamagata">Yamagata</option>
+                        <option value="Fukushima">Fukushima</option>
+                        <option value="Ibaraki">Ibaraki</option>
+                        <option value="Tochigi">Tochigi</option>
+                        <option value="Gunma">Gunma</option>
+                        <option value="Saitama">Saitama</option>
+                        <option value="Chiba">Chiba</option>
+                        <option value="Tokyo">Tokyo</option>
+                        <option value="Kanagawa">Kanagawa</option>
+                        <option value="Niigata">Niigata</option>
+                        <option value="Toyama">Toyama</option>
+                        <option value="Ishikawa">Ishikawa</option>
+                        <option value="Fukui">Fukui</option>
+                        <option value="Yamanashi">Yamanashi</option>
+                        <option value="Nagano">Nagano</option>
+                        <option value="Gifu">Gifu</option>
+                        <option value="Shizuoka">Shizuoka</option>
+                        <option value="Aichi">Aichi</option>
+                        <option value="Mie">Mie</option>
+                        <option value="Shiga">Shiga</option>
+                        <option value="Kyoto">Kyoto</option>
+                        <option value="Osaka">Osaka</option>
+                        <option value="Hyogo">Hyogo</option>
+                        <option value="Nara">Nara</option>
+                        <option value="Wakayama">Wakayama</option>
+                        <option value="Tottori">Tottori</option>
+                        <option value="Shimane">Shimane</option>
+                        <option value="Okayama">Okayama</option>
+                        <option value="Hiroshima">Hiroshima</option>
+                        <option value="Yamaguchi">Yamaguchi</option>
+                        <option value="Tokushima">Tokushima</option>
+                        <option value="Kagawa">Kagawa</option>
+                        <option value="Ehime">Ehime</option>
+                        <option value="Kochi">Kochi</option>
+                        <option value="Fukuoka">Fukuoka</option>
+                        <option value="Saga">Saga</option>
+                        <option value="Nagasaki">Nagasaki</option>
+                        <option value="Kumamoto">Kumamoto</option>
+                        <option value="Oita">Oita</option>
+                        <option value="Miyazaki">Miyazaki</option>
+                        <option value="Kagoshima">Kagoshima</option>
+                        <option value="Okinawa">Okinawa</option>
+                    </select>
+                </div>
+                <div class="setup-field" style="flex-direction: row; align-items: center; gap: 10px; padding-bottom: 2px">
+                    <button id="setBtn" class="btn">설정</button>
+                    <span id="trafficLight"></span>
+                    <span id="setStatus"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- lina 설정 (was: 유저 정보) -->
+        <div class="section-panel">
+            <h2>lina 설정</h2>
+            <div class="setup-row">
+                <div class="setup-field">
+                    <label for="linaAppKey">appKey</label>
+                    <input type="text" id="linaAppKey" placeholder="appKey 입력" />
+                </div>
+                <div class="setup-field">
+                    <label for="linaSspInput">sspUrl</label>
+                    <input type="text" id="linaSspInput" placeholder="sspUrl 입력" />
+                </div>
+                <div class="setup-field">
+                    <label for="linaAdDisplayId">adDisplayId</label>
+                    <input type="text" id="linaAdDisplayId" placeholder="adDisplayId 입력" />
+                </div>
+                <div class="setup-field" style="flex-direction: row; align-items: center; gap: 10px; padding-bottom: 2px">
+                    <button id="linaSetBtn">설정</button>
+                    <span id="linaTrafficLight"></span>
+                    <span id="linaSetStatus"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Point Ledger 설정 -->
+        <div class="section-panel" id="pointLedgerSection">
+            <h2>Point Ledger 설정</h2>
+            <div class="setup-row">
+                <div class="setup-field">
+                    <label for="issuerInput">Issuer ID</label>
+                    <input type="text" id="issuerInput" value="cffd4da2-5cd8-4767-8622-314f65f76e2f" />
+                </div>
+                <div class="setup-field">
+                    <label for="holderInput">User ID (Holder)</label>
+                    <input type="text" id="holderInput" placeholder="IRS 응답 id로 자동 채워짐" />
+                </div>
+                <div class="setup-field">
+                    <label for="keyIdInput">Key ID</label>
+                    <input type="text" id="keyIdInput" value="287cbc64-30fe-4e63-8e5b-a29eebf1ec48" />
+                </div>
+                <div class="setup-field" style="flex: 1 1 320px">
+                    <label for="pemInput">PEM Private Key</label>
+                    <textarea id="pemInput" style="height: 36px; font-family: monospace">
+-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJRhmf5QFDfg9Kh4a
+zqrLYxcgj4Aq2lCaFbSk7E0Yb1uhRANCAARuhauEJkg0QnWG/Ko3TXkrp4Qnclbd
+4Mw9pw6bCoIktMscezSvWLlnkl50DvztrixIecZwx6YsqrMjXQy6T3JP
+-----END PRIVATE KEY-----</textarea
+                    >
+                </div>
+                <div class="setup-field" style="flex: 0 0 auto">
+                    <label style="visibility: hidden">_</label>
+                    <div style="display: flex; align-items: center; gap: 10px">
+                        <button id="ledgerCheckBtn" class="btn">포인트조회</button>
+                        <span
+                            id="ledgerTrafficLight"
+                            style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ccc; border: 1px solid #aaa"
+                        ></span>
+                        <div
+                            id="balanceOutput"
+                            aria-live="polite"
+                            style="
+                                min-width: 260px;
+                                padding: 8px 12px;
+                                font-family: inherit;
+                                font-size: 18px;
+                                font-weight: 600;
+                                color: #222;
+                                background: transparent;
+                                border: none;
+                            "
+                        >
+                            &nbsp;
+                        </div>
+                        <span id="ledgerStatus" style="font-size: 13px; color: #555; margin-left: 8px"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 문서 설정 섹션 -->
+        <div class="section-panel">
+            <h2>문서 설정</h2>
+            <div class="row">
+                <div class="col">
+                    <label>문서 헤더 (head에 들어갈 코드)</label>
+                    <textarea id="docHeader">&lt;script src="https://cdn.web3lge.com/mock/sdk/js/loader.js?sdk_module=inventory"&gt;&lt;/script&gt;</textarea>
+                </div>
+                <div class="col">
+                    <label>문서 본문 (body에 들어갈 코드)</label>
+                    <textarea id="docBody">
+&lt;lina-ads
+          userInfo='{"wallet_address":"0x1234abcd","userOrbVerified":true}'
+          publisherSetup='{"appKey":"your-app-key","sspUrl":"https://ssp-api.stg.web3lge.com/"}'
+          adConfig='{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}'
+          &gt;
+        &lt;/lina-ads&gt;</textarea
+                    >
+                </div>
+            </div>
+
+            <div style="margin-bottom: 0">
+                <button id="applyBtn" class="btn">적용하기</button>
+            </div>
+        </div>
+
+        <!-- 생성된 태그 섹션 -->
+        <div class="section-panel">
+            <h2 class="render-area-title">
+                <span>생성된 태그 (렌더링 영역)</span>
+                <button id="maximizeAdBtn" type="button">원본 크기로 보기</button>
+            </h2>
+            <div id="renderArea"></div>
+        </div>
+
+        <!-- SDK 로그 섹션 -->
+        <div class="section-panel">
+            <h2>SDK 로그 (lina-ads)</h2>
+            <div class="log-toolbar">
+                <button id="sdkLogClearBtn" class="btn" style="background: #6c757d">로그 지우기</button>
+            </div>
+            <pre id="sdkLogPre" class="log-box">SDK 로그 대기 중...</pre>
+        </div>
+
+        <!-- Bid 로그 섹션 -->
+        <div class="section-panel">
+            <h2>Bid 로그 (/openrtb/bid)</h2>
+            <div class="row">
+                <div class="col">
+                    <label>SDK -> SSP</label>
+                    <pre id="bidRequestPre" style="max-height: 400px; overflow: auto; font-size: 12px; white-space: pre-wrap; word-break: break-all">
+적용하기를 누르면 표시됩니다.</pre
+                    >
+                </div>
+                <div class="col">
+                    <label>SSP -> SDK</label>
+                    <pre id="bidResponsePre" style="max-height: 400px; overflow: auto; font-size: 12px; white-space: pre-wrap; word-break: break-all">
+적용하기를 누르면 표시됩니다.</pre
+                    >
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const applyBtn = document.getElementById('applyBtn');
+            const docHeader = document.getElementById('docHeader');
+            const docBody = document.getElementById('docBody');
+            const sspInput = document.getElementById('linaSspInput');
+            const renderArea = document.getElementById('renderArea');
+            const maximizeAdBtn = document.getElementById('maximizeAdBtn');
+            const sdkLogPre = document.getElementById('sdkLogPre');
+            const sdkLogClearBtn = document.getElementById('sdkLogClearBtn');
+            let isAdMaximized = false;
+            let originalAdSize = null;
+            let latestBidSize = null;
+
+            const SDK_LOG_MAX_LINES = 300;
+            const sdkLogLines = [];
+
+            function safeStringify(value) {
+                if (value === undefined) return 'undefined';
+                if (value === null) return 'null';
+                if (typeof value === 'string') return value;
+                if (value instanceof Error) return `${value.name}: ${value.message}`;
+                try {
+                    return JSON.stringify(value);
+                } catch (e) {
+                    return String(value);
+                }
+            }
+
+            function appendSdkLog(level, message, extra) {
+                if (!sdkLogPre) return;
+                const time = new Date().toLocaleTimeString();
+                const extraText = extra !== undefined ? ` | ${safeStringify(extra)}` : '';
+                const line = `[${time}] [${level.toUpperCase()}] ${message}${extraText}`;
+                sdkLogLines.push(line);
+                if (sdkLogLines.length > SDK_LOG_MAX_LINES) sdkLogLines.shift();
+                sdkLogPre.textContent = sdkLogLines.join('\n') || 'SDK 로그 대기 중...';
+                sdkLogPre.scrollTop = sdkLogPre.scrollHeight;
+            }
+
+            function shouldCaptureSdkLog(args) {
+                const keywords = [
+                    '[LinaAds',
+                    '[LinaAdsContent]',
+                    '[LinaAdsComponent]',
+                    '[getAdToken]',
+                    '[login]',
+                    'lina-ads',
+                    'linaSDKLoaded',
+                    'adsLoaded',
+                    'adsError',
+                    'adsPointsEarned',
+                    'MiniKit',
+                    'network',
+                    'Network',
+                    'fetch',
+                    'Fetch',
+                    'CORS',
+                    'cors',
+                    'Bid',
+                    'bid',
+                    'ssp',
+                    'openrtb',
+                    'XHR',
+                    'xhr',
+                    'timeout',
+                    'Timeout',
+                ];
+
+                return args.some((arg) => {
+                    const text = typeof arg === 'string' ? arg : safeStringify(arg);
+                    return keywords.some((keyword) => text.includes(keyword));
+                });
+            }
+
+            function setupSdkLogger() {
+                const originalConsole = {
+                    log: console.log.bind(console),
+                    info: console.info.bind(console),
+                    warn: console.warn.bind(console),
+                    error: console.error.bind(console),
+                };
+
+                ['log', 'info', 'warn', 'error'].forEach((level) => {
+                    const original = originalConsole[level];
+                    console[level] = function (...args) {
+                        try {
+                            if (shouldCaptureSdkLog(args)) {
+                                const message = args.map((arg) => safeStringify(arg)).join(' ');
+                                appendSdkLog(level, message);
+                            }
+                        } catch (e) {
+                            /* ignore logger errors */
+                        }
+                        return original(...args);
+                    };
+                });
+
+                window.addEventListener('linaSDKLoaded', () => appendSdkLog('info', 'Event: linaSDKLoaded'));
+                window.addEventListener('adsLoaded', (event) => appendSdkLog('info', 'Event: adsLoaded', event && event.detail));
+                window.addEventListener('adsError', (event) => appendSdkLog('error', 'Event: adsError', event && event.detail));
+                window.addEventListener('adsPointsEarned', (event) => appendSdkLog('info', 'Event: adsPointsEarned', event && event.detail));
+            }
+
+            function logRunningContext() {
+                let isInIframe = false;
+                try {
+                    isInIframe = window.self !== window.top;
+                } catch (e) {
+                    // 크로스 오리진 iframe에서는 window.top 접근 자체가 막힐 수 있음 (이 또한 의미있는 신호)
+                    isInIframe = true;
+                }
+
+                let ancestorOrigins = null;
+                try {
+                    if (window.location.ancestorOrigins && window.location.ancestorOrigins.length) {
+                        ancestorOrigins = Array.from(window.location.ancestorOrigins);
+                    }
+                } catch (e) {
+                    /* not supported in this browser */
+                }
+
+                appendSdkLog('info', '[Context] location.href', window.location.href);
+                appendSdkLog('info', '[Context] location.origin', window.location.origin);
+                appendSdkLog('info', '[Context] document.referrer', document.referrer || '(none)');
+                appendSdkLog('info', '[Context] isInIframe (self !== top)', isInIframe);
+                appendSdkLog('info', '[Context] ancestorOrigins', ancestorOrigins || '(unsupported or none)');
+                appendSdkLog('info', '[Context] userAgent', navigator.userAgent);
+            }
+
+            function setupGlobalErrorLogger() {
+                window.addEventListener('error', (event) => {
+                    appendSdkLog('error', '[GlobalError]', {
+                        message: event.message,
+                        filename: event.filename,
+                        lineno: event.lineno,
+                        colno: event.colno,
+                        errorName: event.error && event.error.name,
+                        errorMessage: event.error && event.error.message,
+                    });
+                });
+                window.addEventListener('unhandledrejection', (event) => {
+                    const reason = event.reason;
+                    appendSdkLog('error', '[UnhandledRejection]', {
+                        errorName: reason && reason.name,
+                        errorMessage: (reason && reason.message) || safeStringify(reason),
+                    });
+                });
+            }
+
+            if (sdkLogClearBtn) {
+                sdkLogClearBtn.addEventListener('click', () => {
+                    sdkLogLines.length = 0;
+                    if (sdkLogPre) sdkLogPre.textContent = 'SDK 로그 대기 중...';
+                });
+            }
+
+            setupSdkLogger();
+            logRunningContext();
+            setupGlobalErrorLogger();
+
+            // --- Bid Interceptor ---
+            let _fetchOriginal = null;
+            let _xhrOpenOriginal = null;
+            let _xhrSendOriginal = null;
+
+            function teardownBidInterceptor() {
+                if (_fetchOriginal) {
+                    window.fetch = _fetchOriginal;
+                    _fetchOriginal = null;
+                }
+                if (_xhrOpenOriginal) {
+                    XMLHttpRequest.prototype.open = _xhrOpenOriginal;
+                    _xhrOpenOriginal = null;
+                }
+                if (_xhrSendOriginal) {
+                    XMLHttpRequest.prototype.send = _xhrSendOriginal;
+                    _xhrSendOriginal = null;
+                }
+            }
+
+            // fetch를 안 쓰고 XMLHttpRequest로 요청하는 SDK/브릿지 환경을 위한 보조 감시.
+            function setupXhrBidInterceptor(sspHostname) {
+                _xhrOpenOriginal = XMLHttpRequest.prototype.open;
+                _xhrSendOriginal = XMLHttpRequest.prototype.send;
+
+                XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+                    try {
+                        this.__linaIsTarget = new URL(url, window.location.href).hostname === sspHostname;
+                        this.__linaUrl = url;
+                        this.__linaMethod = method;
+                    } catch (e) {
+                        this.__linaIsTarget = false;
+                    }
+                    return _xhrOpenOriginal.call(this, method, url, ...rest);
+                };
+
+                XMLHttpRequest.prototype.send = function (body) {
+                    if (this.__linaIsTarget) {
+                        // Capture request headers
+                        const reqPre = document.getElementById('bidRequestPre');
+                        const resPre = document.getElementById('bidResponsePre');
+                        reqPre.textContent = `요청 대기 중...\nMethod: ${this.__linaMethod}\nURL: ${this.__linaUrl}`;
+                        resPre.textContent = '응답 대기 중...';
+
+                        appendSdkLog('info', '[Bid][XHR] request', { method: this.__linaMethod, url: this.__linaUrl, body });
+
+                        // Capture response headers
+                        this.addEventListener('readystatechange', function () {
+                            if (this.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+                                try {
+                                    const respHeaders = this.getAllResponseHeaders()
+                                        .split('\n')
+                                        .map((h) => h.trim())
+                                        .filter(Boolean)
+                                        .reduce((acc, line) => {
+                                            const idx = line.indexOf(':');
+                                            if (idx > 0) {
+                                                const key = line.substring(0, idx).trim();
+                                                const val = line.substring(idx + 1).trim();
+                                                acc[key] = val;
+                                            }
+                                            return acc;
+                                        }, {});
+                                    appendSdkLog('info', '[Bid][XHR] response headers', respHeaders);
+                                } catch (e) {
+                                    /* ignore header parse errors */
+                                }
+                            }
+                        });
+
+                        this.addEventListener('loadend', () => {
+                            try {
+                                let respBody = this.responseText || '(응답 없음)';
+                                let respDisplay = respBody;
+                                try {
+                                    respDisplay = JSON.stringify(JSON.parse(respBody), null, 2);
+                                } catch {
+                                    respDisplay = respBody;
+                                }
+                                resPre.textContent = `상태: ${this.status} ${this.statusText}\nURL: ${this.__linaUrl}\n\n${respDisplay}`;
+                            } catch (e) {
+                                resPre.textContent = `상태: ${this.status} ${this.statusText}\n응답 본문 읽기 실패`;
+                            }
+                            appendSdkLog(this.status >= 200 && this.status < 300 ? 'info' : 'warn', '[Bid][XHR] response', {
+                                url: this.__linaUrl,
+                                status: this.status,
+                                statusText: this.statusText,
+                                responseURL: this.responseURL,
+                            });
+                        });
+                        this.addEventListener('error', () => {
+                            resPre.textContent = `fetch 실패: 네트워크 오류\n(CORS 차단 또는 네트워크 오류 가능성)`;
+                            appendSdkLog('error', '[Bid][XHR] network error (CORS 차단 가능성 - 상세 사유 비공개)', { url: this.__linaUrl });
+                        });
+                    }
+                    return _xhrSendOriginal.call(this, body);
+                };
+            }
+
+            function setupBidInterceptor(sspBaseUrl) {
+                teardownBidInterceptor();
+                let sspHostname;
+                try {
+                    sspHostname = new URL(sspBaseUrl).hostname;
+                } catch (e) {
+                    return;
+                }
+
+                const reqPre = document.getElementById('bidRequestPre');
+                const resPre = document.getElementById('bidResponsePre');
+                reqPre.textContent = '요청 대기 중...';
+                resPre.textContent = '응답 대기 중...';
+
+                setupXhrBidInterceptor(sspHostname);
+
+                _fetchOriginal = window.fetch.bind(window);
+
+                window.fetch = async function (input, init, ...rest) {
+                    const url = input instanceof Request ? input.url : String(input);
+                    let isTarget = false;
+                    try {
+                        isTarget = new URL(url).hostname === sspHostname;
+                    } catch (e) {}
+
+                    if (isTarget) {
+                        const reqPre = document.getElementById('bidRequestPre');
+                        const resPre = document.getElementById('bidResponsePre');
+                        reqPre.textContent = '요청 대기 중...';
+                        resPre.textContent = '응답 대기 중...';
+
+                        // Build request info
+                        const requestHeaders = {};
+                        if (init && init.headers) {
+                            if (typeof init.headers === 'object' && !Array.isArray(init.headers)) {
+                                Object.keys(init.headers).forEach((k) => {
+                                    requestHeaders[k] = init.headers[k];
+                                });
+                            } else if (Array.isArray(init.headers)) {
+                                init.headers.forEach((h) => {
+                                    requestHeaders[h[0]] = h[1];
+                                });
+                            }
+                        }
+
+                        // Capture BidRequest body
+                        let requestBody = null;
+                        if (init && init.body != null) {
+                            try {
+                                let bodyStr =
+                                    typeof init.body === 'string'
+                                        ? init.body
+                                        : init.body instanceof ArrayBuffer
+                                          ? new TextDecoder().decode(init.body)
+                                          : init.body instanceof Blob
+                                            ? await init.body.text()
+                                            : JSON.stringify(init.body);
+                                requestBody = bodyStr;
+                                let displayBody = bodyStr;
+                                try {
+                                    displayBody = JSON.stringify(JSON.parse(bodyStr), null, 2);
+                                } catch {
+                                    displayBody = bodyStr;
+                                }
+                                const pageOrigin = window.location.origin;
+                                // Origin과 Referer는 브라우저가 자동으로 추가하는 헤더
+                                let reqOrigin = requestHeaders['origin'] || requestHeaders['Origin'];
+                                let reqReferer = requestHeaders['referer'] || requestHeaders['Referer'];
+
+                                if (!reqOrigin) {
+                                    reqOrigin = pageOrigin; // 브라우저가 자동으로 추가
+                                }
+                                if (!reqReferer) {
+                                    reqReferer = document.referrer || pageOrigin; // 브라우저가 자동으로 추가
+                                }
+
+                                reqPre.textContent = `=== Origin 정보 ===\n현재 페이지: ${pageOrigin}\nRequest Origin: ${reqOrigin}\nReferer: ${reqReferer}\n\nMethod: ${init && init.method ? init.method.toUpperCase() : 'GET'}\nURL: ${url}\n\nHeaders:\n${JSON.stringify(requestHeaders, null, 2)}\n\nBody:\n${displayBody}`;
+                            } catch (e) {
+                                reqPre.textContent = '요청 본문을 읽을 수 없습니다.';
+                            }
+                        } else if (input instanceof Request) {
+                            try {
+                                const cloned = input.clone();
+                                const bodyStr = await cloned.text();
+                                requestBody = bodyStr;
+                                let displayBody = bodyStr;
+                                try {
+                                    displayBody = JSON.stringify(JSON.parse(bodyStr), null, 2);
+                                } catch {
+                                    displayBody = bodyStr;
+                                }
+                                const pageOrigin = window.location.origin;
+                                // Request 객체에서 헤더 직접 추출
+                                let reqOrigin = requestHeaders['origin'] || requestHeaders['Origin'];
+                                let reqReferer = requestHeaders['referer'] || requestHeaders['Referer'];
+
+                                // Request 객체가 있으면 여기서 헤더 다시 확인
+                                if (input.headers) {
+                                    if (!reqOrigin && input.headers.get) {
+                                        reqOrigin = input.headers.get('origin');
+                                    }
+                                    if (!reqReferer && input.headers.get) {
+                                        reqReferer = input.headers.get('referer');
+                                    }
+                                }
+
+                                if (!reqOrigin) reqOrigin = pageOrigin;
+                                if (!reqReferer) reqReferer = document.referrer || pageOrigin;
+
+                                reqPre.textContent = `=== Origin 정보 ===\n현재 페이지: ${pageOrigin}\nRequest Origin: ${reqOrigin}\nReferer: ${reqReferer}\n\nMethod: ${input.method || 'GET'}\nURL: ${url}\n\nHeaders:\n${JSON.stringify(requestHeaders, null, 2)}\n\nBody:\n${displayBody}`;
+                            } catch (e) {
+                                reqPre.textContent = '요청 본문을 읽을 수 없습니다.';
+                            }
+                        } else {
+                            const pageOrigin = window.location.origin;
+                            let reqOrigin = requestHeaders['origin'] || requestHeaders['Origin'];
+                            let reqReferer = requestHeaders['referer'] || requestHeaders['Referer'];
+
+                            if (!reqOrigin) reqOrigin = pageOrigin;
+                            if (!reqReferer) reqReferer = document.referrer || pageOrigin;
+
+                            reqPre.textContent = `=== Origin 정보 ===\n현재 페이지: ${pageOrigin}\nRequest Origin: ${reqOrigin}\nReferer: ${reqReferer}\n\nMethod: GET\nURL: ${url}\n\nBody: (없음)`;
+                        }
+
+                        let response;
+                        try {
+                            response = await _fetchOriginal(input, init, ...rest);
+                        } catch (fetchError) {
+                            // fetch()가 reject되는 경우만 CORS 차단(또는 네트워크 단절)으로 볼 수 있음.
+                            // 이 경우 브라우저는 응답 상태/본문을 전혀 노출하지 않음.
+                            appendSdkLog('error', '[Bid] fetch failed (CORS 차단 가능성 - 응답 자체를 못 받음)', {
+                                url,
+                                origin: window.location.origin,
+                                errorName: fetchError && fetchError.name,
+                                errorMessage: fetchError && fetchError.message,
+                            });
+                            resPre.textContent = `fetch 실패: ${fetchError && fetchError.message}\n(CORS 차단 또는 네트워크 오류 가능성)`;
+                            throw fetchError;
+                        }
+
+                        // 주의: fetch가 Response 객체를 반환했다는 것 자체가 CORS 검사를 통과했다는 뜻.
+                        // (통과 못하면 위 catch에서 TypeError로 reject됨)
+                        // response.headers.get('access-control-allow-origin')은 브라우저가 노출하지 않는
+                        // 헤더라 항상 null이 찍히므로 CORS 판단 근거로 쓸 수 없음 — 대신 아래 필드로 진단.
+                        appendSdkLog(response.ok ? 'info' : 'warn', '[Bid] response status', {
+                            url,
+                            status: response.status,
+                            responseUrl: response.url,
+                            redirected: response.redirected,
+                            type: response.type,
+                        });
+
+                        // Capture response headers
+                        const responseHeaders = {};
+                        response.headers.forEach((value, key) => {
+                            responseHeaders[key] = value;
+                        });
+
+                        const cloned = response.clone();
+                        try {
+                            const respStr = await cloned.text();
+                            let respDisplay = respStr;
+                            try {
+                                respDisplay = JSON.stringify(JSON.parse(respStr), null, 2);
+                                const bid = JSON.parse(respStr)?.seatbid?.[0]?.bid?.[0];
+                                if (Number(bid?.w) > 0 && Number(bid?.h) > 0) {
+                                    latestBidSize = { width: Number(bid.w), height: Number(bid.h) };
+                                }
+                            } catch {
+                                respDisplay = respStr || '(응답 없음)';
+                            }
+                            resPre.textContent = `Status: ${response.status} ${response.statusText}\nURL: ${response.url}\n\nHeaders:\n${JSON.stringify(responseHeaders, null, 2)}\n\nBody:\n${respDisplay}`;
+                        } catch (e) {
+                            resPre.textContent = `Status: ${response.status} ${response.statusText}\n응답 본문 읽기 실패`;
+                        }
+                        return response;
+                    }
+
+                    return _fetchOriginal(input, init, ...rest);
+                };
+            }
+
+            function ensureScriptInHead(scriptHtml) {
+                return new Promise((resolve) => {
+                    try {
+                        const div = document.createElement('div');
+                        div.innerHTML = scriptHtml;
+                        const script = div.querySelector('script');
+                        if (script && script.src) {
+                            const newSrc = script.src;
+                            const existing = document.querySelector('script[data-lina-loader]');
+                            if (existing) existing.remove();
+
+                            try {
+                                const scripts = Array.from(document.querySelectorAll('script[src]'));
+                                scripts.forEach((sc) => {
+                                    try {
+                                        const sSrc = sc.src || '';
+                                        if (/script(\.min)?\.js(\?|$)/i.test(sSrc) || /loader(\.min)?\.js(\?|$)/i.test(sSrc)) {
+                                            sc.remove();
+                                        }
+                                    } catch (e) {
+                                        /* ignore per-script errors */
+                                    }
+                                });
+                            } catch (e) {
+                                /* ignore */
+                            }
+
+                            let url;
+                            try {
+                                url = new URL(newSrc, window.location.href);
+                            } catch (e) {
+                                url = { toString: () => newSrc, searchParams: { set: () => {} } };
+                            }
+                            if (url.searchParams) url.searchParams.set('_cb', Date.now().toString());
+
+                            const s = document.createElement('script');
+                            s.src = url.toString();
+                            s.setAttribute('data-lina-loader', '');
+                            s.async = false;
+                            s.addEventListener('load', () => resolve());
+                            s.addEventListener('error', () => resolve());
+                            document.head.appendChild(s);
+                            setTimeout(() => {}, 0);
+                            return;
+                        }
+                    } catch (e) {
+                        /* ignore parse errors */
+                    }
+                    resolve();
+                });
+            }
+
+            function replaceSspUrlInPublisherSetup(bodyHtml, sspUrl) {
+                try {
+                    return bodyHtml.replace(/publisherSetup=('|\")([\s\S]*?)(\1)/, (m, q, jsonStr) => {
+                        let cleaned = jsonStr.replace(/\\'/g, "'");
+                        try {
+                            const obj = JSON.parse(cleaned);
+                            // Only overwrite sspUrl when a non-empty value is provided
+                            if (sspUrl) obj.sspUrl = sspUrl;
+                            const newJson = JSON.stringify(obj);
+                            return `publisherSetup=${q}${newJson}${q}`;
+                        } catch (e) {
+                            return m;
+                        }
+                    });
+                } catch (e) {
+                    return bodyHtml;
+                }
+            }
+
+            // Extract sspUrl from publisherSetup attribute inside a lina-ads block in docBody
+            function extractPublisherSspFromDocBody(bodyHtml) {
+                try {
+                    const m = bodyHtml.match(/publisherSetup=(['"])([\s\S]*?)\1/);
+                    if (!m) return '';
+                    const jsonStr = m[2].replace(/\\'/g, "'");
+                    const obj = JSON.parse(jsonStr);
+                    return obj && obj.sspUrl ? obj.sspUrl : '';
+                } catch (e) {
+                    return '';
+                }
+            }
+
+            function waitForCustomElement(tagName, timeout = 5000) {
+                if (window.customElements && window.customElements.get(tagName)) return Promise.resolve();
+                if (window.customElements && window.customElements.whenDefined) {
+                    return Promise.race([window.customElements.whenDefined(tagName), new Promise((res) => setTimeout(res, timeout))]);
+                }
+                return new Promise((resolve) => {
+                    const start = Date.now();
+                    const iv = setInterval(() => {
+                        if (window.customElements && window.customElements.get(tagName)) {
+                            clearInterval(iv);
+                            resolve();
+                        }
+                        if (Date.now() - start > timeout) {
+                            clearInterval(iv);
+                            resolve();
+                        }
+                    }, 50);
+                });
+            }
+
+            // Update the userInfo attribute inside the docBody textarea based on current user settings
+            function updateDocBodyUserInfo() {
+                const wallet = document.getElementById('walletInput').value.trim();
+                const humanVerified = (document.getElementById('humanVerified').value || '').toString().toLowerCase() === 'y';
+
+                const userInfoObj = {
+                    wallet_address: wallet || '0x1234abcd',
+                    userOrbVerified: humanVerified,
+                };
+                const body = docBody.value;
+
+                // parse existing other attributes so we can rebuild full normalized block
+                const existingPubMatch = body.match(/publisherSetup=(['"])([\s\S]*?)\1/);
+                const existingAdMatch = body.match(/adConfig=(['"])([\s\S]*?)\1/);
+                const existingPointMatch = body.match(/pointBtnUrl=(['"])([\s\S]*?)\1/);
+
+                let existingPub = {};
+                if (existingPubMatch) {
+                    try {
+                        existingPub = JSON.parse(existingPubMatch[2]);
+                    } catch (e) {
+                        existingPub = {};
+                    }
+                }
+
+                let existingAd = {};
+                if (existingAdMatch) {
+                    try {
+                        existingAd = JSON.parse(existingAdMatch[2]);
+                    } catch (e) {
+                        existingAd = {};
+                    }
+                }
+
+                const existingPoint = existingPointMatch ? existingPointMatch[2] : '';
+
+                // merge existing userInfo with inputs
+                const firstMatch = body.match(/userInfo=(['"])([\s\S]*?)\1/);
+                let existingUser = {};
+                if (firstMatch) {
+                    try {
+                        existingUser = JSON.parse(firstMatch[2]);
+                    } catch (e) {
+                        existingUser = {};
+                    }
+                }
+                const mergedUser = Object.assign({}, existingUser, userInfoObj);
+
+                docBody.value = normalizeAndBuildLinaAds(body, mergedUser, existingPub, existingAd, existingPoint);
+            }
+
+            // Update lina-related attributes inside docBody (publisherSetup, adConfig, pointBtnUrl)
+            function updateDocBodyLinaSettings() {
+                const appKey = document.getElementById('linaAppKey').value.trim();
+                const ssp = document.getElementById('linaSspInput').value.trim();
+                const adDisplayId = document.getElementById('linaAdDisplayId').value.trim();
+                const pointUrl = '';
+                // Use normalized replacement to keep the exact format and update values
+                const body = docBody.value;
+                // parse existing attrs
+                const existingUserMatch = body.match(/userInfo=(['"])([\s\S]*?)\1/);
+                const existingPubMatch = body.match(/publisherSetup=(['"])([\s\S]*?)\1/);
+                const existingAdMatch = body.match(/adConfig=(['"])([\s\S]*?)\1/);
+                const existingPointMatch = body.match(/pointBtnUrl=(['"])([\s\S]*?)\1/);
+
+                let publisherObj = {};
+                if (existingPubMatch) {
+                    try {
+                        publisherObj = JSON.parse(existingPubMatch[2]);
+                    } catch (e) {
+                        publisherObj = {};
+                    }
+                }
+                if (appKey) publisherObj.appKey = appKey;
+                if (ssp) publisherObj.sspUrl = ssp;
+
+                let adObj = {};
+                if (existingAdMatch) {
+                    try {
+                        adObj = JSON.parse(existingAdMatch[2]);
+                    } catch (e) {
+                        adObj = {};
+                    }
+                }
+                if (adDisplayId) adObj.adDisplayId = adDisplayId;
+
+                const pointBtn = pointUrl || (existingPointMatch ? existingPointMatch[2] : '');
+
+                // determine existing userInfo to preserve other fields
+                let existingUser = {};
+                if (existingUserMatch) {
+                    try {
+                        existingUser = JSON.parse(existingUserMatch[2]);
+                    } catch (e) {
+                        existingUser = {};
+                    }
+                }
+                const mergedUser = Object.assign({}, existingUser, { wallet_address: existingUser.wallet_address || userInfoObjFromInputs().wallet_address });
+
+                const mergedUserFinal = Object.assign({}, mergedUser);
+                // but apply explicit values from form
+                mergedUserFinal.wallet_address = document.getElementById('walletInput').value.trim() || mergedUserFinal.wallet_address || '0x1234abcd';
+                mergedUserFinal.userOrbVerified = (document.getElementById('humanVerified').value || '').toString().toLowerCase() === 'y';
+
+                docBody.value = normalizeAndBuildLinaAds(body, mergedUserFinal, publisherObj, adObj, pointBtn);
+            }
+
+            // helper to get a userInfo object from current inputs
+            function userInfoObjFromInputs() {
+                return {
+                    wallet_address: document.getElementById('walletInput').value.trim() || '0x1234abcd',
+                    userOrbVerified: (document.getElementById('humanVerified').value || '').toString().toLowerCase() === 'y',
+                };
+            }
+
+            // Build a normalized <lina-ads> block and replace the first occurrence
+            function normalizeAndBuildLinaAds(body, userObj, publisherObj, adObj, pointBtnUrl) {
+                const userJson = JSON.stringify(userObj);
+                const pubJson = JSON.stringify(publisherObj || {});
+                const adJson = JSON.stringify(adObj || {});
+                const pointVal = pointBtnUrl || '';
+
+                // Build block - only include pointBtnUrl if it has a value
+                let block = `<lina-ads\n    userInfo='${userJson}'\n    publisherSetup='${pubJson}'\n    adConfig='${adJson}'`;
+                if (pointVal) {
+                    block += `\n    pointBtnUrl="${pointVal}"`;
+                }
+                block += `\n    >\n</lina-ads>`;
+
+                if (/<lina-ads\b[\s\S]*?<\/lina-ads>/.test(body)) {
+                    return body.replace(/<lina-ads\b[\s\S]*?<\/lina-ads>/, block);
+                }
+                // if not found, prepend
+                return block + '\n' + body;
+            }
+
+            function renderBodyWithoutReplacingAd(bodyHtml) {
+                const template = document.createElement('template');
+                template.innerHTML = bodyHtml;
+
+                const nextAd = template.content.querySelector('lina-ads');
+                const currentAd = renderArea.querySelector('lina-ads');
+                if (currentAd && nextAd) {
+                    const nextAttributes = new Set(Array.from(nextAd.attributes).map((attribute) => attribute.name));
+
+                    Array.from(currentAd.attributes).forEach((attribute) => {
+                        if (!nextAttributes.has(attribute.name)) {
+                            currentAd.removeAttribute(attribute.name);
+                        }
+                    });
+                    Array.from(nextAd.attributes).forEach((attribute) => {
+                        if (currentAd.getAttribute(attribute.name) !== attribute.value) {
+                            currentAd.setAttribute(attribute.name, attribute.value);
+                        }
+                    });
+                    if (typeof currentAd.loadAds === 'function') {
+                        currentAd.loadAds();
+                    }
+                    return;
+                }
+
+                const initialAd = template.content.querySelector('lina-ads');
+                if (initialAd) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'ad-scaled-wrapper';
+                    initialAd.replaceWith(wrapper);
+                    wrapper.appendChild(initialAd);
+                }
+
+                renderArea.replaceChildren(template.content.cloneNode(true));
+            }
+
+            async function applySettings() {
+                const headerHtml = docHeader.value.trim();
+                const bodyHtmlRaw = docBody.value.trim();
+
+                // Allow users to paste/enter escaped entities (&lt; &gt;) or literal tags.
+                const bodyHtmlDecoded = bodyHtmlRaw.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+                // If docBody contains a publisherSetup.sspUrl, prefer it and update the input
+                try {
+                    const sspFromBody = extractPublisherSspFromDocBody(bodyHtmlDecoded);
+                    if (sspFromBody) sspInput.value = sspFromBody;
+                } catch (e) {
+                    /* ignore */
+                }
+
+                const sspUrl = sspInput.value.trim();
+
+                setupBidInterceptor(sspUrl);
+
+                await ensureScriptInHead(headerHtml);
+                await waitForCustomElement('lina-ads', 5000);
+
+                const bodyHtml = replaceSspUrlInPublisherSetup(bodyHtmlDecoded, sspUrl);
+                renderBodyWithoutReplacingAd(bodyHtml);
+
+                setTimeout(() => {
+                    isAdMaximized = false;
+                    originalAdSize = null;
+                    latestBidSize = null;
+                    renderArea.style.backgroundColor = '';
+                    renderArea.style.overflowX = 'auto';
+                    if (maximizeAdBtn) {
+                        maximizeAdBtn.style.display = 'none';
+                        maximizeAdBtn.textContent = '원본 크기로 보기';
+                    }
+
+                    // Apply responsive scaling to fit renderArea
+                    setTimeout(() => {
+                        scaleAdToFitRenderArea();
+                    }, 100);
+                }, 50);
+            }
+
+            function getOriginalAdSize(linaAds) {
+                const root = linaAds.shadowRoot;
+                if (!root) return null;
+
+                let width = 0;
+                let height = 0;
+                root.querySelectorAll('*').forEach((element) => {
+                    const elementWidth = parseFloat(element.style.width);
+                    const elementHeight = parseFloat(element.style.height);
+                    if (Number.isFinite(elementWidth)) width = Math.max(width, elementWidth);
+                    if (Number.isFinite(elementHeight)) height = Math.max(height, elementHeight);
+                });
+
+                return width > 0 && height > 0 ? { width, height } : null;
+            }
+
+            function setAdHostSize(linaAds, width, height) {
+                linaAds.style.setProperty('width', `${width}px`, 'important');
+                linaAds.style.setProperty('height', `${height}px`, 'important');
+                linaAds.style.boxSizing = 'border-box';
+            }
+
+            // Scale the bid creative to the render area without changing its aspect ratio.
+            function scaleAdToFitRenderArea() {
+                try {
+                    const linaAds = renderArea.querySelector('lina-ads');
+                    if (!linaAds) return;
+
+                    const adSize = getOriginalAdSize(linaAds) || latestBidSize;
+                    if (!adSize) {
+                        setTimeout(scaleAdToFitRenderArea, 100);
+                        return;
+                    }
+                    originalAdSize = adSize;
+
+                    const renderRect = renderArea.getBoundingClientRect();
+                    const renderPadding = window.getComputedStyle(renderArea).padding;
+                    const paddingValue = parseFloat(renderPadding) || 12;
+                    const availWidth = renderRect.width - paddingValue * 2;
+
+                    const requiresScaling = adSize.width > availWidth;
+                    renderArea.style.backgroundColor = adSize.width < availWidth ? '#000' : '';
+                    if (maximizeAdBtn) {
+                        maximizeAdBtn.style.display = requiresScaling ? 'inline-block' : 'none';
+                        if (!requiresScaling && isAdMaximized) {
+                            isAdMaximized = false;
+                            maximizeAdBtn.textContent = '원본 크기로 보기';
+                        }
+                    }
+
+                    const scaledWrapper = linaAds.parentElement?.classList.contains('ad-scaled-wrapper') ? linaAds.parentElement : null;
+
+                    const scale = isAdMaximized || !requiresScaling ? 1 : availWidth / adSize.width;
+                    const renderedWidth = adSize.width * scale;
+                    const renderedHeight = adSize.height * scale;
+
+                    renderArea.style.overflowX = isAdMaximized ? 'auto' : 'hidden';
+                    setAdHostSize(linaAds, adSize.width, adSize.height);
+                    if (scaledWrapper) {
+                        scaledWrapper.style.width = `${renderedWidth}px`;
+                        scaledWrapper.style.height = `${renderedHeight}px`;
+                    }
+                    linaAds.style.transform = scale < 1 ? `scale(${scale})` : '';
+                    linaAds.style.transformOrigin = 'top center';
+                } catch (e) {
+                    console.warn('Failed to scale ad:', e);
+                }
+            }
+
+            if (maximizeAdBtn) {
+                maximizeAdBtn.addEventListener('click', () => {
+                    const linaAds = renderArea.querySelector('lina-ads');
+                    if (!linaAds || !originalAdSize) return;
+
+                    isAdMaximized = !isAdMaximized;
+                    maximizeAdBtn.textContent = isAdMaximized ? '렌더링 영역에 맞추기' : '원본 크기로 보기';
+                    scaleAdToFitRenderArea();
+                });
+            }
+
+            window.addEventListener('adsLoaded', () => {
+                setTimeout(scaleAdToFitRenderArea, 100);
+            });
+
+            // Re-scale when window resizes
+            window.addEventListener('resize', () => {
+                clearTimeout(window._resizeTimeout);
+                window._resizeTimeout = setTimeout(() => {
+                    scaleAdToFitRenderArea();
+                }, 200);
+            });
+
+            // Persist all settings (including user fields) to localStorage
+            function persistSettingsToLocal() {
+                const headerHtml = docHeader.value.trim();
+                const bodyHtml = docBody.value.trim();
+                const ssp = sspInput.value.trim();
+                const wallet = document.getElementById('walletInput').value.trim();
+                const humanVerified = document.getElementById('humanVerified').value;
+                const opt1Val = document.getElementById('opt1').value;
+                const opt2Val = document.getElementById('opt2').value;
+                const appKey = document.getElementById('linaAppKey') ? document.getElementById('linaAppKey').value.trim() : '';
+                const linaSsp = document.getElementById('linaSspInput') ? document.getElementById('linaSspInput').value.trim() : '';
+                const adDisplayId = document.getElementById('linaAdDisplayId') ? document.getElementById('linaAdDisplayId').value.trim() : '';
+                const pointBtnUrl = document.getElementById('linaPointBtnUrl') ? document.getElementById('linaPointBtnUrl').value.trim() : '';
+                const ledgerIssuer = document.getElementById('issuerInput') ? document.getElementById('issuerInput').value.trim() : '';
+                const ledgerHolder = document.getElementById('holderInput') ? document.getElementById('holderInput').value.trim() : '';
+                const ledgerKeyId = document.getElementById('keyIdInput') ? document.getElementById('keyIdInput').value.trim() : '';
+                const ledgerPem = document.getElementById('pemInput') ? document.getElementById('pemInput').value.trim() : '';
+                const envVal = (document.querySelector('input[name="env"]:checked') || { value: 'dev' }).value;
+                try {
+                    localStorage.setItem('lina2.saved.header', headerHtml);
+                    localStorage.setItem('lina2.saved.body', bodyHtml);
+                    localStorage.setItem('lina2.saved.ssp', ssp);
+                    // nullifier_hash_orb is always 'test-nullifier' — no longer stored per-input
+                    localStorage.setItem('lina2.saved.wallet', wallet);
+                    localStorage.setItem('lina2.saved.humanVerified', humanVerified);
+                    localStorage.setItem('lina2.saved.opt1', opt1Val);
+                    localStorage.setItem('lina2.saved.opt2', opt2Val);
+                    localStorage.setItem('lina2.saved.appKey', appKey);
+                    localStorage.setItem('lina2.saved.linaSsp', linaSsp);
+                    localStorage.setItem('lina2.saved.adDisplayId', adDisplayId);
+                    localStorage.setItem('lina2.saved.pointBtnUrl', pointBtnUrl);
+                    localStorage.setItem('lina2.saved.ledgerIssuer', ledgerIssuer);
+                    localStorage.setItem('lina2.saved.ledgerHolder', ledgerHolder);
+                    localStorage.setItem('lina2.saved.ledgerKeyId', ledgerKeyId);
+                    localStorage.setItem('lina2.saved.ledgerPem', ledgerPem);
+                    localStorage.setItem('lina2.saved.env', envVal);
+                } catch (e) {
+                    /* ignore storage errors */
+                }
+            }
+
+            function saveAndReload() {
+                persistSettingsToLocal();
+                try {
+                    localStorage.setItem('lina2.doReload', '1');
+                } catch (e) {}
+                window.location.reload();
+            }
+
+            // Apply environment presets (dev / stg / prd)
+            function applyEnvironment(env) {
+                const dev = {
+                    sspUrl: 'https://ssp-api.dev.web3lge.com',
+                    issuer: 'cffd4da2-5cd8-4767-8622-314f65f76e2f',
+                    keyId: '287cbc64-30fe-4e63-8e5b-a29eebf1ec48',
+                    pem: `-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgJRhmf5QFDfg9Kh4a\nzqrLYxcgj4Aq2lCaFbSk7E0Yb1uhRANCAARuhauEJkg0QnWG/Ko3TXkrp4Qnclbd\n4Mw9pw6bCoIktMscezSvWLlnkl50DvztrixIecZwx6YsqrMjXQy6T3JP\n-----END PRIVATE KEY-----`,
+                };
+                const stg = {
+                    sspUrl: 'https://ssp-api.stg.web3lge.com',
+                    issuer: '98764773-c978-4ff4-a40a-c2205915db68',
+                    keyId: 'b1e5ce17-4a85-4d86-8e18-627d787b17bd',
+                    pem: `-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgqzzkqSoTf4njplx2\nrL6euZOMmJcefQ1/mNwMcBDlMD2hRANCAAQxLXkG3RyCrmpikrkfPOCzjaeZHytu\nlO+QrS93CWdBmKgwkL85/qaLLeeABqUOSXBNDRe4DuGiG2keF+R6w+Jf\n-----END PRIVATE KEY-----`,
+                };
+                const prd = {
+                    sspUrl: 'https://ssp-api.web3lina.com',
+                    issuer: 'df71cd78-aec1-435b-bde9-4cfb3ef0bbba',
+                    keyId: '4fe4ff0b-0a20-4d24-b933-fd9fa18a85e2',
+                    pem: `-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgqzzkqSoTf4njplx2\nrL6euZOMmJcefQ1/mNwMcBDlMD2hRANCAAQxLXkG3RyCrmpikrkfPOCzjaeZHytu\nlO+QrS93CWdBmKgwkL85/qaLLeeABqUOSXBNDRe4DuGiG2keF+R6w+Jf\n-----END PRIVATE KEY-----`,
+                };
+
+                const target = env === 'prd' ? prd : env === 'stg' ? stg : dev;
+                const lsp = document.getElementById('linaSspInput');
+                if (lsp) lsp.value = target.sspUrl;
+                const li = document.getElementById('issuerInput');
+                if (li) li.value = target.issuer;
+                const lk = document.getElementById('keyIdInput');
+                if (lk) lk.value = target.keyId;
+                const lp = document.getElementById('pemInput');
+                if (lp) lp.value = target.pem;
+
+                // set docHeader/docBody defaults per environment
+                const headerDev = '<scr' + 'ipt src="https://cdn.dev.web3lge.com/mock/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                const bodyDev =
+                    '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.dev.web3lge.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+
+                const headerStg = '<scr' + 'ipt src="https://cdn.stg.web3lge.com/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                const bodyStg =
+                    '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.stg.web3lge.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+                const headerPrd = '<scr' + 'ipt src="https://cdn.web3lina.com/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                const bodyPrd =
+                    '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.web3lina.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+
+                if (env === 'prd') {
+                    if (docHeader) docHeader.value = headerPrd;
+                    if (docBody) docBody.value = bodyPrd;
+                } else if (env === 'stg') {
+                    if (docHeader) docHeader.value = headerStg;
+                    if (docBody) docBody.value = bodyStg;
+                } else {
+                    if (docHeader) docHeader.value = headerDev;
+                    if (docBody) docBody.value = bodyDev;
+                }
+
+                // Persist the selection
+                try {
+                    localStorage.setItem('lina2.saved.env', env);
+                } catch (e) {}
+                persistSettingsToLocal();
+            }
+
+            const envApplyBtn = document.getElementById('envApplyBtn');
+            if (envApplyBtn)
+                envApplyBtn.addEventListener('click', () => {
+                    const sel = (document.querySelector('input[name="env"]:checked') || { value: 'dev' }).value;
+                    applyEnvironment(sel);
+                });
+
+            // Restore saved settings on load and auto-apply
+            (async function restoreAndAutoApply() {
+                try {
+                    const headerSaved = localStorage.getItem('lina2.saved.header') || '';
+                    const bodySaved = localStorage.getItem('lina2.saved.body') || '';
+                    const sspSaved = localStorage.getItem('lina2.saved.ssp') || '';
+                    const nullifierSaved = localStorage.getItem('lina2.saved.nullifier') || '';
+                    const walletSaved = localStorage.getItem('lina2.saved.wallet') || '';
+                    const humanVerifiedSaved = localStorage.getItem('lina2.saved.humanVerified') || 'Y';
+                    const opt1Saved = localStorage.getItem('lina2.saved.opt1') || '';
+                    const opt2Saved = localStorage.getItem('lina2.saved.opt2') || '';
+                    const appKeySaved = localStorage.getItem('lina2.saved.appKey') || '';
+                    const linaSspSaved = localStorage.getItem('lina2.saved.linaSsp') || '';
+                    const adDisplayIdSaved = localStorage.getItem('lina2.saved.adDisplayId') || '';
+                    const pointBtnUrlSaved = localStorage.getItem('lina2.saved.pointBtnUrl') || '';
+                    const ledgerIssuerSaved = localStorage.getItem('lina2.saved.ledgerIssuer') || '';
+                    const ledgerHolderSaved = localStorage.getItem('lina2.saved.ledgerHolder') || '';
+                    const ledgerKeyIdSaved = localStorage.getItem('lina2.saved.ledgerKeyId') || '';
+                    const ledgerPemSaved = localStorage.getItem('lina2.saved.ledgerPem') || '';
+                    const envSaved = localStorage.getItem('lina2.saved.env') || 'dev';
+
+                    if (envSaved) {
+                        const radio = document.querySelector(`input[name="env"][value="${envSaved}"]`);
+                        if (radio) radio.checked = true;
+                    }
+
+                    // If environment is saved but specific lina/ledger fields are empty, apply env presets
+                    try {
+                        if (envSaved && !linaSspSaved && !ledgerIssuerSaved && !ledgerKeyIdSaved && !ledgerPemSaved) {
+                            applyEnvironment(envSaved);
+                        }
+                    } catch (e) {
+                        /* ignore apply errors */
+                    }
+
+                    if (headerSaved || bodySaved || sspSaved || walletSaved || opt1Saved || opt2Saved) {
+                        docHeader.value = headerSaved;
+                        docBody.value = bodySaved;
+                        sspInput.value =
+                            sspSaved ||
+                            (envSaved === 'prd'
+                                ? 'https://ssp-api.web3lina.com'
+                                : envSaved === 'stg'
+                                  ? 'https://ssp-api.stg.web3lge.com'
+                                  : 'https://ssp-api.dev.web3lge.com');
+                        const wa = document.getElementById('walletInput');
+                        if (wa) wa.value = walletSaved;
+                        const hv = document.getElementById('humanVerified');
+                        if (hv) hv.value = humanVerifiedSaved;
+                        const o1 = document.getElementById('opt1');
+                        if (o1 && opt1Saved) o1.value = opt1Saved;
+                        const o2 = document.getElementById('opt2');
+                        if (o2 && opt2Saved) o2.value = opt2Saved;
+
+                        const lap = document.getElementById('linaAppKey');
+                        if (lap && appKeySaved) lap.value = appKeySaved;
+                        const lsp = document.getElementById('linaSspInput');
+                        if (lsp && linaSspSaved) lsp.value = linaSspSaved;
+                        const lad = document.getElementById('linaAdDisplayId');
+                        if (lad && adDisplayIdSaved) lad.value = adDisplayIdSaved;
+                        const lpt = document.getElementById('linaPointBtnUrl');
+                        if (lpt && pointBtnUrlSaved) lpt.value = pointBtnUrlSaved;
+
+                        const li = document.getElementById('issuerInput');
+                        if (li && ledgerIssuerSaved) li.value = ledgerIssuerSaved;
+                        const lh = document.getElementById('holderInput');
+                        if (lh && ledgerHolderSaved) lh.value = ledgerHolderSaved;
+                        const lk = document.getElementById('keyIdInput');
+                        if (lk && ledgerKeyIdSaved) lk.value = ledgerKeyIdSaved;
+                        const lp = document.getElementById('pemInput');
+                        if (lp && ledgerPemSaved) lp.value = ledgerPemSaved;
+
+                        await ensureScriptInHead(headerSaved);
+                        await waitForCustomElement('lina-ads', 5000);
+                        // 자동 시작 방지
+                        // await applySettings();
+
+                        try {
+                            localStorage.removeItem('lina2.doReload');
+                        } catch (e) {}
+                    }
+                } catch (e) {
+                    /* ignore restore errors */
+                }
+            })();
+
+            applyBtn.addEventListener('click', async () => {
+                persistSettingsToLocal();
+                await applySettings();
+            });
+
+            // ===== Point Ledger functions =====
+            function setLedgerTrafficLight(state, message) {
+                const light = document.getElementById('ledgerTrafficLight');
+                const status = document.getElementById('ledgerStatus');
+                if (light) light.style.background = '#ccc';
+                if (state === 'green') {
+                    if (light) light.style.background = '#2ecc40';
+                } else if (state === 'red') {
+                    if (light) light.style.background = '#e74c3c';
+                }
+                if (status) status.textContent = message || '';
+            }
+
+            async function lookupLedgerBalance() {
+                const issuer = document.getElementById('issuerInput').value.trim();
+                const holder = document.getElementById('holderInput').value.trim();
+                const keyId = document.getElementById('keyIdInput').value.trim();
+                const pem = document.getElementById('pemInput').value.trim();
+                const out = document.getElementById('balanceOutput');
+                if (!issuer || !holder || !keyId || !pem) {
+                    setLedgerTrafficLight('red', '모든 필드를 확인하세요.');
+                    if (out) out.textContent = '';
+                    return;
+                }
+                setLedgerTrafficLight('', '조회 중...');
+                if (out) out.textContent = '';
+                try {
+                    // dynamic import of jose for browser
+                    const jose = await import('https://cdn.jsdelivr.net/npm/jose@4.14.4/dist/browser/index.min.js');
+                    const { SignJWT, importPKCS8 } = jose;
+                    const privateKey = await importPKCS8(pem, 'ES256');
+                    const now = Math.floor(Date.now() / 1000);
+                    const jwt = await new SignJWT({ iss: issuer, aud: 'lina-point-ledger', iat: now, exp: now + 300 })
+                        .setProtectedHeader({ alg: 'ES256', kid: keyId })
+                        .sign(privateKey);
+
+                    const envVal = (document.querySelector('input[name="env"]:checked') || { value: localStorage.getItem('lina2.saved.env') || 'dev' }).value;
+                    const BASE_URL =
+                        envVal === 'prd'
+                            ? 'https://pl-api.web3lina.com'
+                            : envVal === 'stg'
+                              ? 'https://pl-api.stg.web3lge.com'
+                              : 'https://pl-api.dev.web3lge.com';
+                    const url = `${BASE_URL}/v1/holders/${encodeURIComponent(holder)}/balance`;
+                    const res = await fetch(url, { headers: { Authorization: `Bearer ${jwt}` } });
+                    if (res.status === 404) {
+                        // 신규 유저로 간주: 조회 성공(밸런스 0)
+                        if (out) out.textContent = '0';
+                        setLedgerTrafficLight('green', '조회 성공 (신규 유저)');
+                        return;
+                    }
+                    if (!res.ok) throw new Error(`조회 실패: ${res.status} ${res.statusText}`);
+                    const data = await res.json();
+
+                    // Try to extract balance value from common response shapes
+                    let balance = null;
+                    try {
+                        if (data == null) balance = null;
+                        else if (typeof data === 'number' || typeof data === 'string') balance = data;
+                        else if ('balance' in data) balance = data.balance;
+                        else if ('balanceResponse' in data) balance = data.balanceResponse;
+                        else if (data.data && 'balance' in data.data) balance = data.data.balance;
+                        else if (Array.isArray(data.balances) && data.balances.length > 0) {
+                            const b0 = data.balances[0];
+                            balance = (b0 && (b0.balance || b0.amount || b0.value)) || b0;
+                        }
+                    } catch (e) {
+                        balance = null;
+                    }
+
+                    if (out) out.textContent = balance !== null && balance !== undefined ? String(balance) : JSON.stringify(data) || '';
+                    setLedgerTrafficLight('green', '조회 성공');
+                } catch (e) {
+                    if (out) out.textContent = '';
+                    setLedgerTrafficLight('red', e && e.message ? e.message : '오류');
+                }
+            }
+
+            const ledgerBtn = document.getElementById('ledgerCheckBtn');
+            if (ledgerBtn) ledgerBtn.addEventListener('click', lookupLedgerBalance);
+
+            document.getElementById('linaSetBtn').addEventListener('click', async () => {
+                const btn = document.getElementById('linaSetBtn');
+                if (btn) btn.disabled = true;
+                setLinaTrafficLight('', '처리 중...');
+                try {
+                    updateDocBodyLinaSettings();
+                    persistSettingsToLocal();
+                    setLinaTrafficLight('green', '설정 완료');
+                } catch (err) {
+                    setLinaTrafficLight('red', err && err.message ? err.message : '오류 발생');
+                } finally {
+                    if (btn) btn.disabled = false;
+                }
+            });
+
+            // ===== 유저 설정 기능 =====
+            const OPT2_REGION_MAP = {
+                Hokkaido: 'JP-01',
+                Aomori: 'JP-02',
+                Iwate: 'JP-03',
+                Miyagi: 'JP-04',
+                Akita: 'JP-05',
+                Yamagata: 'JP-06',
+                Fukushima: 'JP-07',
+                Ibaraki: 'JP-08',
+                Tochigi: 'JP-09',
+                Gunma: 'JP-10',
+                Saitama: 'JP-11',
+                Chiba: 'JP-12',
+                Tokyo: 'JP-13',
+                Kanagawa: 'JP-14',
+                Niigata: 'JP-15',
+                Toyama: 'JP-16',
+                Ishikawa: 'JP-17',
+                Fukui: 'JP-18',
+                Yamanashi: 'JP-19',
+                Nagano: 'JP-20',
+                Gifu: 'JP-21',
+                Shizuoka: 'JP-22',
+                Aichi: 'JP-23',
+                Mie: 'JP-24',
+                Shiga: 'JP-25',
+                Kyoto: 'JP-26',
+                Osaka: 'JP-27',
+                Hyogo: 'JP-28',
+                Nara: 'JP-29',
+                Wakayama: 'JP-30',
+                Tottori: 'JP-31',
+                Shimane: 'JP-32',
+                Okayama: 'JP-33',
+                Hiroshima: 'JP-34',
+                Yamaguchi: 'JP-35',
+                Tokushima: 'JP-36',
+                Kagawa: 'JP-37',
+                Ehime: 'JP-38',
+                Kochi: 'JP-39',
+                Fukuoka: 'JP-40',
+                Saga: 'JP-41',
+                Nagasaki: 'JP-42',
+                Kumamoto: 'JP-43',
+                Oita: 'JP-44',
+                Miyazaki: 'JP-45',
+                Kagoshima: 'JP-46',
+                Okinawa: 'JP-47',
+            };
+
+            function parseOpt1(val) {
+                const [genderRaw, ageRange] = val.split('/');
+                let gender = genderRaw;
+                if (typeof genderRaw === 'string') {
+                    const g = genderRaw.trim().toLowerCase();
+                    if (g.startsWith('m')) gender = 'M';
+                    else if (g.startsWith('f')) gender = 'F';
+                }
+                const currentYear = new Date().getFullYear();
+                let firstAge;
+                if (ageRange && ageRange.startsWith('over')) {
+                    firstAge = parseInt(ageRange.replace('over', ''), 10);
+                } else if (ageRange && ageRange.includes('-')) {
+                    firstAge = parseInt(ageRange.split('-')[0], 10);
+                } else {
+                    firstAge = parseInt(ageRange, 10) || 30;
+                }
+                return { gender, yob: currentYear - firstAge };
+            }
+
+            function setTrafficLight(state, message) {
+                const light = document.getElementById('trafficLight');
+                const status = document.getElementById('setStatus');
+                light.className = '';
+                if (state === 'green') {
+                    light.classList.add('green');
+                } else if (state === 'red') {
+                    light.classList.add('red');
+                }
+                status.textContent = message || '';
+            }
+
+            function setLinaTrafficLight(state, message) {
+                const light = document.getElementById('linaTrafficLight');
+                const status = document.getElementById('linaSetStatus');
+                if (light) light.className = '';
+                if (state === 'green') {
+                    if (light) light.classList.add('green');
+                } else if (state === 'red') {
+                    if (light) light.classList.add('red');
+                }
+                if (status) status.textContent = message || '';
+            }
+
+            document.getElementById('setBtn').addEventListener('click', async () => {
+                const wallet = document.getElementById('walletInput').value.trim();
+                const humanVerified = document.getElementById('humanVerified').value;
+                const opt1Val = document.getElementById('opt1').value;
+                const opt2Val = document.getElementById('opt2').value;
+                // const nullifier = ""; // For testing purposes, you can replace this with a real nullifier if needed.
+
+                if (!wallet) {
+                    setTrafficLight('red', 'Wallet 주소를 입력해주세요.');
+                    return;
+                }
+
+                const setBtn = document.getElementById('setBtn');
+                setBtn.disabled = true;
+                setTrafficLight('', '처리 중...');
+
+                try {
+                    // Step 1: POST /irs (send nullifier & wallet)
+                    const envVal = (document.querySelector('input[name="env"]:checked') || { value: localStorage.getItem('lina2.saved.env') || 'dev' }).value;
+                    const apiBase =
+                        envVal === 'prd'
+                            ? 'https://api.web3lina.com'
+                            : envVal === 'stg'
+                              ? 'https://api.stg.web3lge.com'
+                              : 'https://api.dev.web3lge.com';
+                    const irsRes = await fetch(`${apiBase}/irs`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ wallet_address: wallet, is_human_verified_yn: humanVerified }),
+                    });
+                    if (!irsRes.ok) throw new Error(`/irs 오류: ${irsRes.status} ${irsRes.statusText}`);
+                    const irsData = await irsRes.json();
+                    // If the API returns an id for the created/identified user, use it as holderId
+                    try {
+                        const holderIdFromIrs = irsData && (irsData.id || irsData.user_id || irsData.external_id);
+                        if (holderIdFromIrs) {
+                            const holderEl = document.getElementById('holderInput');
+                            if (holderEl) {
+                                holderEl.value = holderIdFromIrs;
+                            }
+                            try {
+                                localStorage.setItem('lina2.saved.ledgerHolder', holderIdFromIrs);
+                            } catch (e) {}
+                        }
+                    } catch (e) {
+                        /* ignore */
+                    }
+                    const accessToken = irsData.access_token;
+                    if (!accessToken) throw new Error('/irs 응답에 access_token이 없습니다.');
+
+                    // Step 2: Build demographics payload
+                    const { gender, yob } = parseOpt1(opt1Val);
+                    const city = opt2Val;
+                    const region = OPT2_REGION_MAP[opt2Val] || '';
+
+                    const propRes = await fetch(`${apiBase}/users/properties`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        body: JSON.stringify({
+                            demographics: {
+                                yob,
+                                gender,
+                                location: { country: 'JP', region, city },
+                            },
+                        }),
+                    });
+                    if (!propRes.ok) throw new Error(`/users/properties 오류: ${propRes.status} ${propRes.statusText}`);
+
+                    // Step 3: Update the docBody textarea to reflect user settings
+                    updateDocBodyUserInfo();
+
+                    // Persist updated settings
+                    persistSettingsToLocal();
+
+                    setTrafficLight('green', '설정 완료');
+                } catch (err) {
+                    setTrafficLight('red', err.message || '오류 발생');
+                } finally {
+                    setBtn.disabled = false;
+                }
+            });
+
+            // Reset all inputs and localStorage to defaults
+            function resetAllSettings() {
+                try {
+                    // determine selected env
+                    const sel = (document.querySelector('input[name="env"]:checked') || { value: localStorage.getItem('lina2.saved.env') || 'dev' }).value;
+
+                    // Defaults per env
+                    const headerDev = '<scr' + 'ipt src="https://cdn.dev.web3lge.com/mock/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                    const bodyDev =
+                        '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.dev.web3lge.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+
+                    const headerStg = '<scr' + 'ipt src="https://cdn.stg.web3lge.com/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                    const bodyStg =
+                        '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.stg.web3lge.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+                    const headerPrd = '<scr' + 'ipt src="https://cdn.web3lina.com/sdk/js/loader.js?sdk_module=inventory"></scr' + 'ipt>';
+                    const bodyPrd =
+                        '<lina-ads\n    userInfo=\'{"wallet_address":"0x1234abcd","userOrbVerified":true}\'\n    publisherSetup=\'{"appKey":"your-app-key","sspUrl":"https://ssp-api.web3lina.com"}\'\n    adConfig=\'{"adDisplayId":"718ec268-8096-49a3-bd79-36ac7af34818"}\'\n    >\n</lina-ads>';
+
+                    // Clear inputs
+                    const wa = document.getElementById('walletInput');
+                    if (wa) wa.value = '';
+                    const hv = document.getElementById('humanVerified');
+                    if (hv) hv.value = 'Y';
+                    const o1 = document.getElementById('opt1');
+                    if (o1) o1.selectedIndex = 0;
+                    const o2 = document.getElementById('opt2');
+                    if (o2) o2.selectedIndex = 0;
+
+                    const lap = document.getElementById('linaAppKey');
+                    if (lap) lap.value = '';
+                    const lsp = document.getElementById('linaSspInput');
+                    if (lsp) lsp.value = '';
+                    const lad = document.getElementById('linaAdDisplayId');
+                    if (lad) lad.value = '';
+                    const lpt = document.getElementById('linaPointBtnUrl');
+                    if (lpt) lpt.value = '';
+
+                    // Reset doc header/body according to env
+                    if (sel === 'prd') {
+                        if (docHeader) docHeader.value = headerPrd;
+                        if (docBody) docBody.value = bodyPrd;
+                    } else if (sel === 'stg') {
+                        if (docHeader) docHeader.value = headerStg;
+                        if (docBody) docBody.value = bodyStg;
+                    } else {
+                        if (docHeader) docHeader.value = headerDev;
+                        if (docBody) docBody.value = bodyDev;
+                    }
+
+                    // Clear all localStorage
+                    try {
+                        localStorage.clear();
+                    } catch (e) {
+                        /* ignore storage errors */
+                    }
+
+                    // Persist selected env marker
+                    try {
+                        localStorage.setItem('lina2.saved.env', sel);
+                    } catch (e) {}
+
+                    // Ensure radio reflects selection
+                    const radio = document.querySelector(`input[name="env"][value="${sel}"]`);
+                    if (radio) radio.checked = true;
+
+                    try {
+                        applyEnvironment(sel);
+                    } catch (e) {
+                        /* ignore */
+                    }
+
+                    // Clear status lights
+                    setTrafficLight('', '');
+                    setLinaTrafficLight('', '');
+
+                    // Apply to render area so user sees reset content
+                    //applySettings();
+                } catch (e) {
+                    console.error('resetAllSettings error', e);
+                }
+            }
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                if (!confirm('설정값과 로컬 저장을 모두 초기화하시겠습니까?')) return;
+                resetAllSettings();
+            });
+        </script>
+    </body>
+</html>
